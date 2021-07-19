@@ -113,6 +113,7 @@ while(not game_over):
         print('You placed a piece at', user_pos)
         engine.print_board()
         print('-' * 50)
+
         player_won = engine.check_win(player_piece)
         if(player_won):
             print('Congrats, you won!')
@@ -124,6 +125,7 @@ while(not game_over):
         print('AI placed a piece at', ai_pos)
         engine.print_board()
         print('-' * 50)
+        
         ai_won = engine.check_win(ai_piece)
         if(ai_won):
             print('The AI won!')
