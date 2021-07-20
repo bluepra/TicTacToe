@@ -8,7 +8,7 @@ board = [[' ', ' ', ' '],
 
 pieces = ['X', 'O']
 
-# Randomly selects pieces
+# Randomly selects pieces for the player and AI
 player_piece = random.choice(pieces)
 
 if player_piece == pieces[0]:
