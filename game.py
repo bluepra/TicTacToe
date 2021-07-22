@@ -96,11 +96,7 @@ def main():
 
     # Randomly selects pieces for the player and AI
     player_piece = random.choice(pieces)
-
-    if player_piece == pieces[0]:
-        ai_piece = pieces[1]
-    else:
-        ai_piece = pieces[0]
+    ai_piece = pieces[1] if player_piece == pieces[0] else pieces[0]
 
     # ---------------------------------------------------------------------------------------------
 
