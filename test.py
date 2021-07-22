@@ -1,5 +1,0 @@
-pos = input('Enter pos (i,j): ')
-i,j = pos.split(',')
-i = int(i)
-j = int(j)
-print(type(i),i)
