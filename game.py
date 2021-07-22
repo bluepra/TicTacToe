@@ -90,9 +90,7 @@ class Engine():
 def main():
     # Standard 3x3 board
     board_width = 3
-    board = [[' ', ' ', ' '],
-             [' ', ' ', ' '],
-             [' ', ' ', ' ']]
+    board = [[' ' for j in range(3)] for i in range(3)]
 
     pieces = ['X', 'O']
 
