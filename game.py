@@ -89,6 +89,7 @@ class Engine():
 
 def main():
     board_width = 3
+    num_dashes = 50
     board = [[' ' for j in range(board_width)] for i in range(board_width)]
 
     pieces = ['X', 'O']
@@ -101,15 +102,16 @@ def main():
 
     game_over = False
     engine = Engine(board, player_piece, ai_piece)
-
+    print('WELCOME TO AI TIC TAC TOE')
+    print('-' * num_dashes)
     print('You are the', player_piece, 'player')
     print('The AI is the', ai_piece, 'player')
     engine.print_board()
+    print('-' * num_dashes)
 
     num = random.randint(0, 1)
-    player_turn = False
-    if pieces[num] == player_piece:
-        player_turn = True
+    player_turn = True if pieces[num] == player_piece else False
+    print('You play first move') if player_turn else print('AI moves first')
 
     # While game is not over, keep playing
     while not game_over:
@@ -119,7 +121,7 @@ def main():
 
             print('You placed a piece at', user_pos)
             engine.print_board()
-            print('-' * 50)
+            print('-' * num_dashes)
 
             player_won = engine.check_win(player_piece)
             if (player_won):
@@ -131,7 +133,7 @@ def main():
 
             print('AI placed a piece at', ai_pos)
             engine.print_board()
-            print('-' * 50)
+            print('-' * num_dashes)
 
             ai_won = engine.check_win(ai_piece)
             if (ai_won):
