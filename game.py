@@ -36,26 +36,35 @@ class Engine():
         else:
             self.board[i][j] = piece
 
+    # Checks the user's requested input for validity.
+    # Returns true if spot is valid and empty, False otherwise
+    def check_user_input(self, pos):
+        i,j = pos
+        valid_pos = False
+        # Check if coords are within board's bounds
+        if (i >= 0 and i < len(self.board) and j >= 0 and j < len(self.board)):
+            # Check if coords point to an empty spot
+            if (self.board[i][j] == ' '):
+                valid_pos = True
+            else:
+                print(f'Spot {i},{j} is occupied.')
+        else:
+            print('The position you entered is out of bounds.')
+
+        return valid_pos
+
     # Gets the user's choice
     def get_user_input(self):
-        valid_pos = True
+        valid_pos = False
 
-        pos = input('Enter a position, ex: 2,3: ')
-        i,j = pos.split(',')
-        i = int(i)
-        j = int(j)
-
-        if(i < 0 or i >= len(self.board) or j < 0 or j >= len(self.board)):
-            valid_pos = False
-        
+        # Keeps looping till the user enters a valid pos
         while(not valid_pos):
-            print('That position is occupied')
-            pos = input('Enter a position, ex: 2,3: ')
+            pos = input('Enter a position, ex: 0,2: ')
             i,j = pos.split(',')
             i = int(i)
             j = int(j)
 
-            if(i >= 0 and i < len(self.board) and j >= 0 and j < len(self.board)):
+            if(self.check_user_input((i,j))):
                 valid_pos = True
 
         return (i,j)
