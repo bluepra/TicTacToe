@@ -1,7 +1,43 @@
 import random
+import copy
+
+# Bot uses the minimax algorithm.
+# The AI is the maximizing player. The human is the minimizing player.
+class AI:
+    def __init__(self, ai_board, ai_piece, opp_piece):
+        self.board = ai_board
+        self.piece = ai_piece
+        self.opp_piece = opp_piece
+
+    # Returns the empty positions for a given board
+    def get_empty_spots(self, board):
+        empty_spots = []
+        for i in range(len(board)):
+            for j in range(len(board[i])):
+                if board[i][j] == ' ':
+                    empty_spots.append((i, j))
+
+        return empty_spots
+
+    # Given a current board and the next player to play, this function
+    # returns list of tuples containing successor boards and their respective positions
+    def succ(self, current_board, next_player_piece):
+        empty_spots = self.get_empty_spots(current_board)
+        successors = []
+
+        # Generate successor boards
+        for spot in empty_spots:
+            i, j = spot
+            new_board = copy.deepcopy(current_board)
+            new_board[i][j] = next_player_piece
+            successors.append((new_board, spot))
+
+        return successors
+
+    def game_state(self, board):
 
 
-class Engine():
+class Engine:
     def __init__(self, board, player_piece, ai_piece):
         self.board = board
         self.player_piece = player_piece
@@ -102,6 +138,8 @@ def main():
 
     game_over = False
     engine = Engine(board, player_piece, ai_piece)
+    ai = AI(board, ai_piece, player_piece) # The AI object that will play against human player
+
     print('WELCOME TO AI TIC TAC TOE')
     print('-' * num_dashes)
     print('You are the', player_piece, 'player')
