@@ -1,11 +1,12 @@
 import random
 import copy
 
+
 # Bot uses the minimax algorithm.
 # The AI is the maximizing player. The human is the minimizing player.
 class AI:
     def __init__(self, ai_board, ai_piece, opp_piece):
-        self.board = ai_board # This is the AI's current board 
+        self.board = ai_board  # This is the AI's current board
         self.piece = ai_piece
         self.opp_piece = opp_piece
 
@@ -34,8 +35,59 @@ class AI:
 
         return successors
 
-    # Given a board and
-    def game_state(self, board):
+    # If piece won on the passed in board, return True
+    # If piece is has not won, return False
+    def check_win(self, board, piece):
+        piece_won = False
+
+        # Horizontal check
+        for row in board:
+            if row[0] != ' ' and row[0] == piece and row[1] == piece and row[2] == piece:
+                piece_won = True
+
+        # Vertical check
+        for col in range(len(board)):
+            if board[0][col] == piece and board[1][col] == piece and board[2][col] == piece:
+                piece_won = True
+
+        # Diagonal check /
+        if board[0][0] == piece and board[1][1] == piece and board[2][2] == piece:
+            piece_won = True
+
+        # Diagonal check \
+        if board[2][0] == piece and board[1][1] == piece and board[0][2] == piece:
+            piece_won = True
+
+        return piece_won
+
+    def get_board_value(self, board, piece):
+        board_value = 0
+        # Horizontal counts
+        for row in board:
+            if row[0] != ' ' and row[0] == piece and row[1] == piece and row[2] == piece:
+                piece_won = True
+        
+        # Vertical counts
+        # / Diagonal counts
+        # \ Diagonal counts
+        return board_value
+    # Given a board and piece, this function returns a number
+    # based on how good or bad the current board is.
+    def game_state(self, board, piece):
+        # If the board is a winning board, return 1 or -1 based on piece
+        if self.check_win(board, piece):
+            if piece == self.opp_piece:
+                return -1
+            else:
+                return 1
+
+        # If not winning board, calculate board value
+        board_value = self.get_board_value(board, piece)
+
+        if piece == self.opp_piece:
+            return board_value * -1
+
+        return board_value
 
 
 class Engine:
@@ -139,7 +191,7 @@ def main():
 
     game_over = False
     engine = Engine(board, player_piece, ai_piece)
-    ai = AI(board, ai_piece, player_piece) # The AI object that will play against human player
+    ai = AI(board, ai_piece, player_piece)  # The AI object that will play against human player
 
     print('WELCOME TO AI TIC TAC TOE')
     print('-' * num_dashes)
