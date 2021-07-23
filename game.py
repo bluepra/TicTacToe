@@ -63,14 +63,24 @@ class AI:
     def get_board_value(self, board, piece):
         board_value = 0
         # Horizontal counts
+        max_h_val = 0
         for row in board:
-            if row[0] != ' ' and row[0] == piece and row[1] == piece and row[2] == piece:
-                piece_won = True
-        
+            cur_h_val = row.count(piece)
+            if cur_h_val > max_h_val:
+                max_h_val = cur_h_val
+
         # Vertical counts
+        transposed_board = list(map(list, zip(*board)))
+        max_v_val = 0
+        for row in transposed_board:
+            cur_v_val = row.count(piece)
+            if cur_v_val > max_v_val:
+                max_v_val = cur_v_val
+
         # / Diagonal counts
         # \ Diagonal counts
         return board_value
+
     # Given a board and piece, this function returns a number
     # based on how good or bad the current board is.
     def game_state(self, board, piece):
