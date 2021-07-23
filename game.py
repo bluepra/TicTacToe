@@ -1,14 +1,78 @@
 import random
 import copy
+import math
 
 
 # Bot uses the minimax algorithm.
 # The AI is the maximizing player. The human is the minimizing player.
 class AI:
-    def __init__(self, ai_board, ai_piece, opp_piece):
+    def __init__(self, ai_board: list, ai_piece: str, opp_piece: str, look_ahead_depth=3):
         self.board = ai_board  # This is the AI's current board
         self.piece = ai_piece
         self.opp_piece = opp_piece
+        self.look_ahead_depth = look_ahead_depth
+
+    def get_best_move(self):
+        successors = self.succ(self.board, self.piece)
+        # successors = random.sample(successors) # Shuffle the successors
+        depth = 1
+        max_eval = float('-inf')
+        best_move = None
+
+        for succ in successors:
+            succ_board = succ[0]
+            succ_move = succ[1]
+
+            # If the current successor is a winning state, return the move
+            if self.check_win(succ_board, self.piece):
+                best_move = succ_move
+                break
+            else:
+                cur_eval = self.min_player(succ_board, depth + 1)
+                if max_eval < cur_eval:
+                    max_eval = cur_eval
+                    best_move = succ_move
+        return best_move
+
+    # AI's turn - returns a move
+    def max_player(self, cur_board, depth):
+        # If the max depth reached or
+        # cur_board is winning one for the player, return the game_state
+        if depth == self.look_ahead_depth or self.check_win(cur_board, self.piece):
+            return self.game_state(cur_board, self.piece)
+
+        successors = self.succ(cur_board, self.piece)
+        # successors = random.sample(successors) # Shuffle the successors
+        max_eval = float('inf')
+        for succ in successors:
+            succ_board = succ[0]
+            succ_move = succ[1]
+
+            cur_eval = self.min_player(succ_board, depth + 1)
+            if max_eval < cur_eval:
+                max_eval = cur_eval
+
+        return max_eval
+
+    # Player's turn - returns a move
+    def min_player(self, cur_board, depth):
+        # If the max depth reached or
+        # cur_board is winning one for the player, return the game_state
+        if depth == self.look_ahead_depth or self.check_win(cur_board, self.opp_piece):
+            return self.game_state(cur_board, self.opp_piece)
+
+        successors = self.succ(cur_board, self.opp_piece)
+        # successors = random.sample(successors) # Shuffle the successors
+        min_eval = float('inf')
+        for succ in successors:
+            succ_board = succ[0]
+            succ_move = succ[1]
+
+            cur_eval = self.max_player(succ_board, depth + 1)
+            if min_eval > cur_eval:
+                min_eval = cur_eval
+
+        return min_eval
 
     # Returns the empty positions for a given board
     def get_empty_spots(self, board):
@@ -62,6 +126,7 @@ class AI:
 
     def get_board_value(self, board, piece):
         board_value = 0
+
         # Horizontal counts
         max_h_val = 0
         for row in board:
@@ -78,7 +143,14 @@ class AI:
                 max_v_val = cur_v_val
 
         # / Diagonal counts
+        forward_diag = [board[2][0], board[1][1], board[0][1]]
+        forward_diag_val = forward_diag.count(piece)
+
         # \ Diagonal counts
+        backward_diag = [board[0][0], board[1][1], board[2][2]]
+        backward_diag_val = backward_diag.count(piece)
+
+        board_value = max_h_val + max_v_val + forward_diag_val + backward_diag_val
         return board_value
 
     # Given a board and piece, this function returns a number
@@ -87,9 +159,9 @@ class AI:
         # If the board is a winning board, return 1 or -1 based on piece
         if self.check_win(board, piece):
             if piece == self.opp_piece:
-                return -1
+                return -100
             else:
-                return 1
+                return 100
 
         # If not winning board, calculate board value
         board_value = self.get_board_value(board, piece)
@@ -99,12 +171,16 @@ class AI:
 
         return board_value
 
+    def place_piece(self, piece, pos):
+        i,j = pos
+        self.board[i][j] = piece
+
 
 class Engine:
-    def __init__(self, board, player_piece, ai_piece):
+    def __init__(self, board: list, player_piece: str, ai: AI):
         self.board = board
         self.player_piece = player_piece
-        self.ai_piece = ai_piece
+        self.ai = ai
 
     # Prints this engine's board
     def print_board(self):
@@ -118,6 +194,7 @@ class Engine:
         if (self.board[i][j] != ' '):
             raise Exception(f'{position} is occupied')
         else:
+            print('trying to place', piece)
             self.board[i][j] = piece
 
     # Checks the user's requested input for validity.
@@ -126,9 +203,9 @@ class Engine:
         i, j = pos
         valid_pos = False
         # Check if coords are within board's bounds
-        if (i >= 0 and i < len(self.board) and j >= 0 and j < len(self.board)):
-            # Check if coords point to an empty spot
-            if (self.board[i][j] == ' '):
+        if 0 <= i < len(self.board) and 0 <= j < len(self.board):
+            # Check if coordinates point to an empty spot
+            if self.board[i][j] == ' ':
                 valid_pos = True
             else:
                 print(f'Spot {i},{j} is occupied.')
@@ -142,7 +219,7 @@ class Engine:
         valid_pos = False
 
         # Keeps looping till the user enters a valid pos
-        while (not valid_pos):
+        while not valid_pos:
             pos = input('Enter a position, ex: 0,2: ')
             i, j = pos.split(',')
             i = int(i)
@@ -155,14 +232,7 @@ class Engine:
 
     # AI randomly choose a empty spot
     def ai_move(self):
-        invalid_position = True
-        i = random.randint(0, len(self.board) - 1)
-        j = random.randint(0, len(self.board) - 1)
-        while (self.board[i][j] != ' '):
-            i = random.randint(0, len(self.board) - 1)
-            j = random.randint(0, len(self.board) - 1)
-
-        return (i, j)
+        return self.ai.get_best_move()
 
     # If piece won, return True
     # If piece is has not won, return False
@@ -190,7 +260,6 @@ def main():
     board_width = 3
     num_dashes = 50
     board = [[' ' for j in range(board_width)] for i in range(board_width)]
-
     pieces = ['X', 'O']
 
     # Randomly selects pieces for the player and AI
@@ -200,8 +269,8 @@ def main():
     # ---------------------------------------------------------------------------------------------
 
     game_over = False
-    engine = Engine(board, player_piece, ai_piece)
-    ai = AI(board, ai_piece, player_piece)  # The AI object that will play against human player
+    ai = AI(copy.deepcopy(board), ai_piece, player_piece)  # The AI object that will play against human player
+    engine = Engine(copy.deepcopy(board), player_piece, ai)
 
     print('WELCOME TO AI TIC TAC TOE')
     print('-' * num_dashes)
@@ -219,6 +288,7 @@ def main():
         if player_turn:
             user_pos = engine.get_user_input()
             engine.place_piece(player_piece, user_pos)
+            ai.place_piece(player_piece, user_pos)
 
             print('You placed a piece at', user_pos)
             engine.print_board()
@@ -231,6 +301,7 @@ def main():
         else:
             ai_pos = engine.ai_move()
             engine.place_piece(ai_piece, ai_pos)
+            ai.place_piece(ai_piece, ai_pos)
 
             print('AI placed a piece at', ai_pos)
             engine.print_board()
@@ -247,5 +318,21 @@ def main():
     print('Game over!')
 
 
+def debug():
+    board = [[' ' for j in range(3)] for i in range(3)]
+    board[1][1] = 'O'
+    pieces = ['X', 'O']
+
+    # Randomly selects pieces for the player and AI
+    player_piece = random.choice(pieces)
+    ai_piece = pieces[1] if player_piece == pieces[0] else pieces[0]
+
+    ai = AI(board, ai_piece, player_piece)  # The AI object that will play against human player
+    s = ai.succ(board, ai_piece)
+    for i in s:
+        print(i)
+
+
 if __name__ == '__main__':
     main()
+    # debug()
