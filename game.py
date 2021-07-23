@@ -5,7 +5,7 @@ import copy
 # The AI is the maximizing player. The human is the minimizing player.
 class AI:
     def __init__(self, ai_board, ai_piece, opp_piece):
-        self.board = ai_board
+        self.board = ai_board # This is the AI's current board 
         self.piece = ai_piece
         self.opp_piece = opp_piece
 
@@ -34,6 +34,7 @@ class AI:
 
         return successors
 
+    # Given a board and
     def game_state(self, board):
 
 
