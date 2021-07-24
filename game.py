@@ -191,10 +191,9 @@ class Engine:
     def place_piece(self, piece: str, position):
         i, j = position
         # If spot is not empty, throw exception
-        if (self.board[i][j] != ' '):
+        if self.board[i][j] != ' ':
             raise Exception(f'{position} is occupied')
         else:
-            print('trying to place', piece)
             self.board[i][j] = piece
 
     # Checks the user's requested input for validity.
@@ -202,7 +201,7 @@ class Engine:
     def check_user_input(self, pos):
         i, j = pos
         valid_pos = False
-        # Check if coords are within board's bounds
+        # Check if coordinates are within board's bounds
         if 0 <= i < len(self.board) and 0 <= j < len(self.board):
             # Check if coordinates point to an empty spot
             if self.board[i][j] == ' ':
@@ -220,7 +219,7 @@ class Engine:
 
         # Keeps looping till the user enters a valid pos
         while not valid_pos:
-            pos = input('Enter a position, ex: 0,2: ')
+            pos = input('You turn! Enter a position, ex: 0,2: ')
             i, j = pos.split(',')
             i = int(i)
             j = int(j)
@@ -295,7 +294,7 @@ def main():
             print('-' * num_dashes)
 
             player_won = engine.check_win(player_piece)
-            if (player_won):
+            if player_won:
                 print('Congrats, you won!')
                 game_over = True
         else:
@@ -308,7 +307,7 @@ def main():
             print('-' * num_dashes)
 
             ai_won = engine.check_win(ai_piece)
-            if (ai_won):
+            if ai_won:
                 print('The AI won!')
                 game_over = True
 
