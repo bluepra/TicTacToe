@@ -14,7 +14,7 @@ class AI:
 
     def get_best_move(self):
         successors = self.succ(self.board, self.piece)
-        # successors = random.sample(successors) # Shuffle the successors
+        random.shuffle(successors) # Shuffle the successors
         depth = 1
         max_eval = float('-inf')
         best_move = None
@@ -25,51 +25,53 @@ class AI:
 
             # If the current successor is a winning state, return the move
             if self.check_win(succ_board, self.piece):
+                # print(f'Winning successor found: {self.game_state(succ_board, self.piece)}')
                 best_move = succ_move
                 break
             else:
                 cur_eval = self.min_player(succ_board, depth + 1)
+                # print(cur_eval)
                 if max_eval < cur_eval:
                     max_eval = cur_eval
                     best_move = succ_move
         return best_move
 
-    # AI's turn - returns a move
+    # AI's turn
     def max_player(self, cur_board, depth):
         # If the max depth reached or
-        # cur_board is winning one for the player, return the game_state
-        if depth == self.look_ahead_depth or self.check_win(cur_board, self.piece):
-            return self.game_state(cur_board, self.piece)
+        # cur_board is winning one for opp player, return the game_state
+        if depth == self.look_ahead_depth or self.check_win(cur_board, self.opp_piece):
+            return self.game_state(cur_board, self.opp_piece)
 
         successors = self.succ(cur_board, self.piece)
-        # successors = random.sample(successors) # Shuffle the successors
+        random.shuffle(successors) # Shuffle the successors
         max_eval = float('inf')
         for succ in successors:
             succ_board = succ[0]
             succ_move = succ[1]
 
             cur_eval = self.min_player(succ_board, depth + 1)
-            if max_eval < cur_eval:
+            if cur_eval > max_eval:
                 max_eval = cur_eval
 
         return max_eval
 
-    # Player's turn - returns a move
+    # Player's turn
     def min_player(self, cur_board, depth):
         # If the max depth reached or
-        # cur_board is winning one for the player, return the game_state
-        if depth == self.look_ahead_depth or self.check_win(cur_board, self.opp_piece):
-            return self.game_state(cur_board, self.opp_piece)
+        # cur_board is winning one for ai player, return the game_state
+        if depth == self.look_ahead_depth or self.check_win(cur_board, self.piece):
+            return self.game_state(cur_board, self.piece)
 
         successors = self.succ(cur_board, self.opp_piece)
-        # successors = random.sample(successors) # Shuffle the successors
+        random.shuffle(successors) # Shuffle the successors
         min_eval = float('inf')
         for succ in successors:
             succ_board = succ[0]
             succ_move = succ[1]
 
             cur_eval = self.max_player(succ_board, depth + 1)
-            if min_eval > cur_eval:
+            if cur_eval < min_eval:
                 min_eval = cur_eval
 
         return min_eval
@@ -179,6 +181,7 @@ class AI:
 class Engine:
     def __init__(self, board: list, player_piece: str, ai: AI):
         self.board = board
+        self.board_empty_spots = 9
         self.player_piece = player_piece
         self.ai = ai
 
@@ -195,6 +198,7 @@ class Engine:
             raise Exception(f'{position} is occupied')
         else:
             self.board[i][j] = piece
+            self.board_empty_spots -= 1
 
     # Checks the user's requested input for validity.
     # Returns true if spot is valid and empty, False otherwise
@@ -232,6 +236,13 @@ class Engine:
     # AI randomly choose a empty spot
     def ai_move(self):
         return self.ai.get_best_move()
+
+    def check_draw(self):
+        if self.board_empty_spots == 0:
+            return True
+        else:
+            return False
+
 
     # If piece won, return True
     # If piece is has not won, return False
@@ -293,6 +304,11 @@ def main():
             engine.print_board()
             print('-' * num_dashes)
 
+            # Tie check
+            if engine.check_draw():
+                print('Tie game!')
+                game_over = True
+
             player_won = engine.check_win(player_piece)
             if player_won:
                 print('Congrats, you won!')
@@ -305,6 +321,11 @@ def main():
             print('AI placed a piece at', ai_pos)
             engine.print_board()
             print('-' * num_dashes)
+
+            # Tie check
+            if engine.check_draw():
+                print('Tie game!')
+                game_over = True
 
             ai_won = engine.check_win(ai_piece)
             if ai_won:
