@@ -26,6 +26,6 @@ Example of a tie game:\
 ## Credits:
 Game made by Prannav Arora\
 All icons and game piece images found on https://www.flaticon.com/ \
-X icon provided by Pixel Perfect from flaticon 
-O icon provided by Freepik from flaticon
-Display icon provided by Freepik from flaticon
+X icon provided by Pixel Perfect from flaticon\
+O icon provided by Freepik from flaticon\
+Display icon provided by Freepik from flaticon\
