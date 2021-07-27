@@ -1,6 +1,7 @@
 import pygame
 import random
 from game import *
+from gui_elements import *
 
 pygame.init()
 
