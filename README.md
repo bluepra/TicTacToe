@@ -24,7 +24,7 @@ Example of a tie game:\
 ![Tie example](https://github.com/bluepra/TicTacToe/blob/main/images/tie_game.PNG?raw=true)
 
 ## Credits:
-Game made by Prannav Arora\
+Game made by Prannav Arora\\
 All icons and game piece images found on https://www.flaticon.com/ \
 X icon provided by Pixel Perfect from flaticon\
 O icon provided by Freepik from flaticon\
