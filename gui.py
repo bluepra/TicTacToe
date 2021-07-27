@@ -12,9 +12,13 @@ img_padding = (square_width - img_width) // 2
 line_width = 5
 screen_width = square_width * 3 + line_width * 2
 screen = pygame.display.set_mode((screen_width, screen_width))
+pygame.display.set_caption('Tic-Tac-Toe vs. AI Bot')
 
 x_img = pygame.image.load('images/x.png')
 o_img = pygame.image.load('images/o.png')
+display_icon = pygame.image.load('images/display_icon.png')
+
+pygame.display.set_icon(display_icon)
 
 run = True
 clock = pygame.time.Clock()
@@ -41,7 +45,7 @@ ai = AI(copy.deepcopy(board), ai_piece, player_piece)  # The AI object that will
 engine = Engine(copy.deepcopy(board), player_piece, ai)
 
 
-def draw_board(surface, board):
+def draw_board_lines(surface):
     # first horizontal line
     pygame.draw.rect(surface, BLACK, pygame.Rect(0, square_width, screen_width, line_width))
     # second horizontal line
@@ -51,8 +55,11 @@ def draw_board(surface, board):
     # second vertical line
     pygame.draw.rect(surface, BLACK, pygame.Rect(2 * square_width + line_width, 0, line_width, screen_width))
 
-    # Draw the engine's board on screen
 
+def draw_board(surface, board):
+    draw_board_lines(surface)
+
+    # Draw the pieces
     for i in range(len(board)):
         for j in range(len(board[i])):
             x = j * (square_width + line_width) + img_padding
@@ -61,8 +68,6 @@ def draw_board(surface, board):
                 screen.blit(x_img, (x, y))
             elif engine.board[i][j] == pieces[1]:
                 screen.blit(o_img, (x, y))
-            else:
-                pass
 
 
 def get_user_input(pos):
