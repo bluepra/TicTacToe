@@ -7,8 +7,8 @@ WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 
-text_bar_font = pygame.font.SysFont('segoeuiblack', 25)
-
+text_bar_font = pygame.font.SysFont('consolas', 25)
+print(pygame.font.get_fonts())
 class TextBar:
     def __init__(self,  x, y, width, height, box_color= WHITE, text = '', text_color = BLACK):
         self.text = text
@@ -23,7 +23,8 @@ class TextBar:
         pygame.draw.rect(
             surface, self.box_color, (self.x, self.y, self.width, self.height))
         word = text_bar_font.render(self.text, True, self.text_color)
-        surface.blit(word, (self.x, self.y + 10))
+        padding = (self.height - word.get_rect().height) // 2
+        surface.blit(word, (self.x + padding, self.y + padding))
 
     def update_text(self, new_text):
         self.text = new_text

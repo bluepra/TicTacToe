@@ -9,11 +9,17 @@ pygame.init()
 square_width = 100
 img_width = 64
 img_padding = (square_width - img_width) // 2
-
 line_width = 5
+
 screen_width = square_width * 3 + line_width * 2
-screen = pygame.display.set_mode((screen_width, screen_width))
+text_bar_height = 40
+screen_height = screen_width + text_bar_height
+text_bar_width = screen_width
+
+screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption('Tic-Tac-Toe vs. AI Bot')
+
+text_bar = TextBar(0,screen_width, text_bar_width, text_bar_height)
 
 x_img = pygame.image.load('images/x.png')
 o_img = pygame.image.load('images/o.png')
@@ -59,7 +65,7 @@ def draw_board_lines(surface):
 
 def draw_board(surface, board):
     draw_board_lines(surface)
-
+    text_bar.draw(surface)
     # Draw the pieces
     for i in range(len(board)):
         for j in range(len(board[i])):
@@ -77,12 +83,13 @@ def get_user_input(pos):
     return i, j
 
 
-print('WELCOME TO AI TIC TAC TOE')
-print('-' * num_dashes)
-print('You are the', player_piece, 'player')
-print('The AI is the', ai_piece, 'player')
-print('You play first move') if player_turn else print('AI moves first')
-print('-' * num_dashes)
+# print('WELCOME TO AI TIC TAC TOE')
+# print('-' * num_dashes)
+# print('You are the', player_piece, 'player')
+# print('The AI is the', ai_piece, 'player')
+# print('You play first move') if player_turn else print('AI moves first')
+# print('-' * num_dashes)
+text_bar.update_text(f'You are the {player_piece} player')
 
 while run:
     mouse_pos = None
@@ -107,12 +114,14 @@ while run:
 
                 # Tie check
                 if engine.check_draw():
-                    print('Tie game!')
+                    # print('Tie game!')
+                    text_bar.update_text('Tie game!')
                     game_over = True
 
                 player_won = engine.check_win(player_piece)
                 if player_won:
-                    print('Congrats, you won!')
+                    # print('Congrats, you won!')
+                    text_bar.update_text('Congrats, you won!')
                     game_over = True
                 player_turn = not player_turn
         else:
@@ -126,12 +135,14 @@ while run:
 
             # Tie check
             if engine.check_draw():
-                print('Tie game!')
+                # print('Tie game!')
+                text_bar.update_text('Tie game!')
                 game_over = True
 
             ai_won = engine.check_win(ai_piece)
             if ai_won:
-                print('The AI won!')
+                # print('The AI won!')
+                text_bar.update_text('AI bot won!')
                 game_over = True
             player_turn = not player_turn
 
