@@ -16,6 +16,8 @@ Both players take turns placing one piece at a time till someone wins or there i
 
 ## Objective:
 Standard tic-tac-toe rules apply: First to get 3 pieces in a row, wins!.\
+\
+Here the AI (the O player) won:
 ![Win example](https://github.com/bluepra/TicTacToe/blob/main/images/win_example.PNG?raw=true)\
 \
 Example of a tie game:\
