@@ -14,7 +14,7 @@ Both players take turns placing their respective piece on the 3x3 board.
 
 ## Objective:
 Standard tic-tac-toe rules apply: First to get 3 pieces in a row, wins!.
-![Win example](https://github.com/bluepra/TicTacToe/main/images/win_example.png?raw=true)
+![Win example](https://github.com/bluepra/TicTacToe/main/images/win_example.PNG?raw=true)
 
 ## Credits:
 Game made by - Prannav Arora
